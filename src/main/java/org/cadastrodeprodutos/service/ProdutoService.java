@@ -1,47 +1,70 @@
-package org.applogin.cadastrodeprodutos.service;
+package org.cadastrodeprodutos.service;
 
-import org.applogin.cadastrodeprodutos.entity.Produto;
+import org.cadastrodeprodutos.dto.ProdutoRequest;
+import org.cadastrodeprodutos.dto.ProdutoResponse;
+import org.cadastrodeprodutos.entity.Produto;
+import org.cadastrodeprodutos.mapper.ProdutoMapper;
+import org.cadastrodeprodutos.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProdutoService {
 
-    
+    private final ProdutoRepository produtoRepository;
+    private final ProdutoMapper produtoMapper;
 
-    public Produto criarProduto(Produto produto){
-
-        return produto;
+    public ProdutoService(ProdutoRepository produtoRepository, ProdutoMapper produtoMapper) {
+        this.produtoRepository = produtoRepository;
+        this.produtoMapper = produtoMapper;
     }
 
-    public List<Produto> listarProdutos(){
-
-        List<Produto> produtos = repository.findAll();
-
-        if(produtos.isEmpty()){
-            return List.of();
-        }
-        return produtos;
-
+    // LISTAR
+    public List<ProdutoResponse> listar() {
+        return produtoRepository.findAll()
+                .stream()
+                .map(produtoMapper::toResponse)
+                .toList();
     }
 
-    public Produto buscarProdutoPorId(Integer id){
+    // BUSCAR POR ID
+    public ProdutoResponse buscarPorId(Integer id) {
 
-        Optional<Produto> produtos = repository.findById(id);
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
-        if(produtos.isEmpty()){
-            throw new RuntimeException("Produto não encontrado");
-        }
-        return produtos.get();
-
+        return produtoMapper.toResponse(produto);
     }
 
+    // CRIAR
+    public ProdutoResponse criar(ProdutoRequest request) {
 
-    public void excluirProduto(Integer id){
+        Produto produto = produtoMapper.toEntity(request);
 
+        Produto salvo = produtoRepository.save(produto);
+
+        return produtoMapper.toResponse(salvo);
+    }
+
+    // ATUALIZAR
+    public ProdutoResponse atualizar(Integer id, ProdutoRequest request) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        produto.setNome(request.nome());
+        produto.setPreco(request.preco());
+
+        Produto atualizado = produtoRepository.save(produto);
+
+        return produtoMapper.toResponse(atualizado);
+    }
+
+    // DELETAR
+    public void deletar(Integer id) {
+        produtoRepository.deleteById(id);
     }
 
 }

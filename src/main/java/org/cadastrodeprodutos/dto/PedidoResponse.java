@@ -1,4 +1,6 @@
 package org.cadastrodeprodutos.dto;
 
-public record PedidoResponse() {
+public record PedidoResponse(
+
+) {
 }

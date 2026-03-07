@@ -1,6 +1,6 @@
-package org.applogin.cadastrodeprodutos.repository;
+package org.cadastrodeprodutos.repository;
 
-import org.applogin.cadastrodeprodutos.entity.Produto;
+import org.cadastrodeprodutos.entity.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

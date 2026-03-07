@@ -1,21 +1,27 @@
-package org.applogin.cadastrodeprodutos.dto;
+package org.cadastrodeprodutos.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.web.service.registry.HttpServiceGroupConfigurer;
+import jakarta.validation.constraints.Size;
 
 public record ProdutoRequest(
 
-    @NotNull(message = "Id é obrigatório", groups =  HttpServiceGroupConfigurer.Groups.Update.class)
-    int id,
 
-    @NotBlank()
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 50)
     String nome,
 
+    @DecimalMin("0.01")
     double preco,
 
+    @NotNull
     int quantidade,
 
+    @NotNull
+    @Size(max = 500)
     String descricao
 
-){}
+){
+
+}

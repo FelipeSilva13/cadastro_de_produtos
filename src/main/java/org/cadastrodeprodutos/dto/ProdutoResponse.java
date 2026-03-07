@@ -1,4 +1,4 @@
-package org.applogin.cadastrodeprodutos.dto;
+package org.cadastrodeprodutos.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,15 @@
-package org.applogin.cadastrodeprodutos.mapper;
+package org.cadastrodeprodutos.mapper;
 
-public class ProdutoMapper {
+import org.mapstruct.Mapper;
+
+import org.cadastrodeprodutos.dto.ProdutoRequest;
+import org.cadastrodeprodutos.dto.ProdutoResponse;
+import org.cadastrodeprodutos.entity.Produto;
+
+@Mapper(componentModel = "spring")
+public interface ProdutoMapper {
+
+    Produto toEntity(ProdutoRequest produtoRequest);
+
+    ProdutoResponse toResponse(Produto produto);
 }
