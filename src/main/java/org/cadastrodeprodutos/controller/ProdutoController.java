@@ -2,10 +2,8 @@ package org.cadastrodeprodutos.controller;
 
 import org.cadastrodeprodutos.dto.ProdutoRequest;
 import org.cadastrodeprodutos.dto.ProdutoResponse;
-import org.cadastrodeprodutos.entity.Produto;
 import org.cadastrodeprodutos.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
