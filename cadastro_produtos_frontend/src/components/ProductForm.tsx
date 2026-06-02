@@ -192,6 +192,23 @@ export function ProductForm({
             )}
           </div>
 
+          {/* Upload de Imagem */}
+          <div className="space-y-2">
+            <Label htmlFor="imageFile" className="text-slate-700 font-medium">
+              Imagem do Produto (arquivo)
+            </Label>
+            <Input
+              id="imageFile"
+              type="file"
+              accept="image/*"
+              {...register('imageFile')}
+              className="border-slate-300 bg-slate-50 focus:bg-white"
+            />
+            <p className="text-sm text-slate-500">
+              Você pode enviar uma imagem do seu computador. Se selecionar um arquivo, a URL será ignorada.
+            </p>
+          </div>
+
           {/* Botões */}
           <div className="flex gap-4 pt-6 border-t border-slate-200">
             <Button 

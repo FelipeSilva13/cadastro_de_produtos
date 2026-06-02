@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { toast } from 'sonner';
-import { ApiError, apiDelete, apiGet, apiPost, apiPut } from '../services/api';
+import { ApiError, apiCall, apiDelete, apiGet, apiPost, apiPut } from '../api/api';
 import type { Product, ProductFormData } from '../types/product';
 
 interface ProductContextType {
@@ -45,9 +45,26 @@ export function ProductProvider({ children }: { children: ReactNode }) {
     fetchProducts();
   }, [fetchProducts]);
 
+  const createProductFormData = (productData: ProductFormData) => {
+    const { imageFile, ...payload } = productData;
+    const formData = new FormData();
+    formData.append(
+      'produto',
+      new Blob([JSON.stringify(payload)], { type: 'application/json' })
+    );
+
+    const file = imageFile instanceof FileList ? imageFile[0] : imageFile;
+    if (file instanceof File) {
+      formData.append('image', file);
+    }
+
+    return formData;
+  };
+
   const addProduct = useCallback(async (productData: ProductFormData) => {
     try {
-      const newProduct = await apiPost<Product>('/products', productData);
+      const formData = createProductFormData(productData);
+      const newProduct = await apiPost<Product>('/products', formData);
       setError(null);
       setProducts((prev) => [...prev, newProduct]);
       toast.success('Produto adicionado com sucesso!');
@@ -64,7 +81,20 @@ export function ProductProvider({ children }: { children: ReactNode }) {
 
   const updateProduct = useCallback(async (id: string, productData: ProductFormData) => {
     try {
-      const updatedProduct = await apiPut<Product>(`/products/${id}`, productData);
+      const { imageFile, ...payload } = productData;
+      const file = imageFile instanceof FileList ? imageFile[0] : imageFile;
+      let updatedProduct: Product;
+
+      if (file instanceof File) {
+        const formData = createProductFormData(productData);
+        updatedProduct = await apiCall<Product>(`/products/${id}`, {
+          method: 'PUT',
+          data: formData,
+        });
+      } else {
+        updatedProduct = await apiPut<Product>(`/products/${id}`, payload);
+      }
+
       setError(null);
       setProducts((prev) =>
         prev.map((product) =>

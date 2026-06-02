@@ -8,13 +8,6 @@ RUN npm ci --legacy-peer-deps
 
 COPY . .
 
-RUN npm run build
+EXPOSE 3000
 
-FROM nginx:1.27-alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
-
+CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]

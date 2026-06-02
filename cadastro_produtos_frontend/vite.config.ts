@@ -11,6 +11,11 @@ const proxy = {
     secure: false,
     rewrite: (path: string) => path.replace(/^\/api/, ''),
   },
+  '/uploads': {
+    target: backendTarget,
+    changeOrigin: true,
+    secure: false,
+  },
 }
 
 export default defineConfig({

@@ -6,6 +6,12 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from './ui/card';
 import { Badge } from './ui/badge';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -24,6 +30,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product, onDelete }: ProductCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -49,15 +56,31 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
 
   const stockStatus = getStockStatus(product.stock);
 
+  const imageSrc = product.imageUrl
+    ? product.imageUrl.startsWith('/')
+      ? `${import.meta.env.VITE_API_URL || ''}${product.imageUrl}`
+      : product.imageUrl
+    : undefined;
+
   return (
     <Card className="group overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_18px_35px_-28px_rgba(15,23,42,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_55px_-30px_rgba(15,23,42,0.35)]">
       <CardHeader className="relative p-0">
-        {product.imageUrl ? (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
+        {imageSrc ? (
+          <button
+            onClick={() => setIsImageModalOpen(true)}
+            className="group relative h-72 w-full cursor-pointer overflow-hidden"
+          >
+            <img
+              src={imageSrc}
+              alt={product.name}
+              className="h-full w-full object-contain bg-slate-50 transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/10">
+              <span className="text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                Clique para ampliar
+              </span>
+            </div>
+          </button>
         ) : (
           <div className="flex h-72 w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-200">
             <Package className="h-16 w-16 text-slate-400" />
@@ -71,6 +94,22 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
             {stockStatus.label}
           </Badge>
         </div>
+
+        {/* Modal de visualização de imagem */}
+        <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+          <DialogContent className="max-w-4xl w-full">
+            <DialogHeader>
+              <DialogTitle>{product.name}</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center justify-center bg-slate-50 rounded-lg p-4">
+              <img
+                src={imageSrc}
+                alt={product.name}
+                className="max-h-[600px] object-contain"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent className="space-y-6 p-6">
         <div className="space-y-3">

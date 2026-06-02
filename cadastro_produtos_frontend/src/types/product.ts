@@ -17,4 +17,5 @@ export interface ProductFormData {
   category: string;
   stock: number;
   imageUrl?: string;
+  imageFile?: FileList | File | null;
 }

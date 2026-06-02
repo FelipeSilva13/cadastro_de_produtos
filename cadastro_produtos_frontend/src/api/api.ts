@@ -24,10 +24,18 @@ export class ApiError extends Error {
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
+
+export async function apiUpload<T>(
+  endpoint: string,
+  formData: FormData
+): Promise<T> {
+
+  return apiCall<T>(endpoint, {
+    method: 'POST',
+    data: formData,
+  });
+}
 
 function normalizeAxiosError(error: unknown): ApiError {
   if (axios.isAxiosError(error)) {
