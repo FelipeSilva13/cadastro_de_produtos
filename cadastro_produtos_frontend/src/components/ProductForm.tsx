@@ -57,7 +57,7 @@ export function ProductForm({
 
   return (
     <Card className="border-slate-200 shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+      <CardHeader className="bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200">
         <CardTitle className="text-slate-900">{submitLabel}</CardTitle>
         <p className="text-sm text-slate-600 mt-1">
           Preencha os campos abaixo para {submitLabel.toLowerCase()}

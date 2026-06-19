@@ -1,7 +1,5 @@
-import axios from "axios";
-import api, { apiPost } from "../api/api";
 
-const API_URL = "http://localhost:8080/produtos";
+import { apiPost } from "../api/api";
 
 export async function criarProduto(dados: any, imagem: string | Blob) {
 

@@ -63,7 +63,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
     : undefined;
 
   return (
-    <Card className="group overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_18px_35px_-28px_rgba(15,23,42,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_55px_-30px_rgba(15,23,42,0.35)]">
+    <Card className="group overflow-hidden rounded-4xl border border-slate-200 bg-white shadow-[0_18px_35px_-28px_rgba(15,23,42,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_55px_-30px_rgba(15,23,42,0.35)]">
       <CardHeader className="relative p-0">
         {imageSrc ? (
           <button
@@ -82,7 +82,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
             </div>
           </button>
         ) : (
-          <div className="flex h-72 w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-200">
+          <div className="flex h-72 w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-slate-200">
             <Package className="h-16 w-16 text-slate-400" />
           </div>
         )}
@@ -105,7 +105,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
               <img
                 src={imageSrc}
                 alt={product.name}
-                className="max-h-[600px] object-contain"
+                className="max-h-150 object-contain"
               />
             </div>
           </DialogContent>
@@ -116,7 +116,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
           <h3 className="line-clamp-2 text-2xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950">
             {product.name}
           </h3>
-          <p className="line-clamp-2 min-h-[3.5rem] text-base leading-7 text-slate-600">
+          <p className="line-clamp-2 min-h-14 text-base leading-7 text-slate-600">
             {product.description}
           </p>
         </div>

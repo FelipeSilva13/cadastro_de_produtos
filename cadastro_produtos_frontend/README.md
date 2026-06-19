@@ -1,359 +1,162 @@
-# ⚡ Quick Start - Cadastro de Produtos
+# Cadastro de Produtos - Frontend
 
-## 🚀 Iniciar em 3 Passos
+Interface web do sistema de cadastro de produtos. O frontend foi criado com React, TypeScript e Vite, consumindo a API Spring Boot do backend.
 
-### 1️⃣ Atualizar Node.js (OBRIGATÓRIO)
-```powershell
-# Verificar versão atual
-node --version
+## Visao Geral
 
-# Se for menor que 20.19, faça upgrade:
-# https://nodejs.org/ (LTS recomendado)
-# OU use nvm-windows: https://github.com/coreybutler/nvm-windows
+O usuario consegue listar, buscar, filtrar, cadastrar, editar e excluir produtos. A aplicacao tambem permite enviar imagem no cadastro e na edicao de produtos, usando `multipart/form-data`.
+
+## Tecnologias
+
+- React 19
+- TypeScript
+- Vite
+- React Router
+- Axios
+- Tailwind CSS
+- shadcn/ui e Radix UI
+- Sonner para notificacoes
+- Lucide React para icones
+
+## Estrutura Principal
+
+```text
+cadastro_produtos_frontend/
+|-- src/
+|   |-- api/
+|   |   `-- api.ts                  # Cliente HTTP Axios
+|   |-- components/
+|   |   |-- PageHeader.tsx          # Cabecalho das paginas
+|   |   |-- ProductCard.tsx         # Card de produto
+|   |   |-- ProductForm.tsx         # Formulario de produto
+|   |   `-- ui/                     # Componentes de UI
+|   |-- contexts/
+|   |   `-- ProductContext.tsx      # Estado e operacoes de produtos
+|   |-- hooks/
+|   |   `-- useProductForm.ts       # Regras do formulario
+|   |-- pages/
+|   |   |-- ProductList.tsx         # Lista, busca e filtros
+|   |   |-- AddProduct.tsx          # Cadastro
+|   |   `-- EditProduct.tsx         # Edicao
+|   |-- services/
+|   |   `-- ProdutoService.ts       # Servico auxiliar
+|   |-- types/
+|   |   `-- product.ts              # Tipos de produto
+|   |-- App.tsx                     # Rotas da aplicacao
+|   `-- main.tsx                    # Entrada React
+|-- .env.example
+|-- Dockerfile
+|-- package.json
+`-- vite.config.ts
 ```
 
-### 2️⃣ Instalar Dependências
+## Rotas da Aplicacao
+
+| Rota | Tela | Funcao |
+|---|---|---|
+| `/` | Lista de produtos | Exibe produtos, busca, filtra e permite excluir |
+| `/add` | Cadastro de produto | Cria um novo produto |
+| `/edit/:id` | Edicao de produto | Atualiza um produto existente |
+
+## Integracao com a API
+
+O cliente HTTP fica em `src/api/api.ts`.
+
+Por padrao, a base da API usa:
+
+```ts
+import.meta.env.VITE_API_URL || '/api'
+```
+
+No desenvolvimento com Vite, `vite.config.ts` cria um proxy:
+
+```text
+/api -> http://localhost:8084
+/uploads -> http://localhost:8084/uploads
+```
+
+Assim, chamadas para `/api/products` sao encaminhadas para o backend em `http://localhost:8084/products`.
+
+## Endpoints Usados pelo Frontend
+
+| Metodo | Endpoint no frontend | Endpoint no backend | Funcao |
+|---|---|---|---|
+| `GET` | `/products` | `/products` | Listar produtos |
+| `GET` | `/products/{id}` | `/products/{id}` | Buscar produto por id |
+| `POST` | `/products` | `/products` | Criar produto com imagem opcional |
+| `PUT` | `/products/{id}` | `/products/{id}` | Atualizar produto |
+| `DELETE` | `/products/{id}` | `/products/{id}` | Excluir produto |
+
+Para cadastro e edicao com imagem, o frontend envia um `FormData` com:
+
+- `produto`: JSON do produto como `application/json`
+- `image`: arquivo selecionado pelo usuario
+
+## Variaveis de Ambiente
+
+Crie um arquivo `.env` com base no `.env.example`:
+
+```env
+VITE_API_URL=/api
+VITE_ENV=development
+```
+
+Tambem e possivel apontar direto para o backend:
+
+```env
+VITE_API_URL=http://localhost:8084
+```
+
+## Como Executar Localmente
+
+Requisitos:
+
+- Node.js compativel com o Vite usado no projeto
+- Backend rodando em `http://localhost:8084`
+
+Comandos:
+
 ```bash
-cd cadastro_produtos
 npm install
-```
-
-### 3️⃣ Rodar em Desenvolvimento
-```bash
 npm run dev
 ```
 
-✅ Frontend rodará em: `http://localhost:5175`
+A aplicacao fica disponivel em:
 
----
-
-## 📋 Verifica Antes de Começar
-
-Seu backend precisa estar rodando em:
-```
-http://localhost:3000/api
+```text
+http://localhost:5175
 ```
 
-E implementar estes endpoints:
-```
-GET    /api/products           #  Listar todos
-POST   /api/products           #  Criar novo
-PUT    /api/products/:id       #  Atualizar
-DELETE /api/products/:id       #  Deletar
-```
+## Scripts
 
-Ver: **[BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md)** para detalhes
-
----
-
-## 📂 O Que Foi Criado
-
-```
-cadastro_produtos/
-│
-├── 📋 DOCUMENTAÇÃO
-│   ├── SETUP.md                     # Como configurar
-│   ├── BACKEND_INTEGRATION.md       # Integração com API
-│   ├── DESIGN_GUIDE.md              # Design visual e UX
-│   ├── NAVIGATION.md                # Fluxos e rotas
-│   ├── .env.example                 # Variáveis de ambiente
-│   
-├── src/
-│   ├── App.tsx                      # Roteamento
-│   ├── main.tsx                     # Entry point
-│   │
-│   ├── pages/
-│   │   ├── ProductList.tsx          # Lista (HOME)
-│   │   ├── AddProduct.tsx           # Adicionar (/add)
-│   │   └── EditProduct.tsx          # Editar (/edit/:id)
-│   │
-│   ├── components/
-│   │   ├── ProductCard.tsx          # Card de produto
-│   │   ├── ProductForm.tsx          # Formulário
-│   │   ├── PageHeader.tsx           # Header gradiente
-│   │   └── ui/                      # shadcn/ui components
-│   │
-│   ├── contexts/
-│   │   └── ProductContext.tsx       # Estado global
-│   │
-│   ├── services/
-│   │   └── api.ts                   # Cliente HTTP
-│   │
-│   ├── hooks/
-│   │   └── useProductForm.ts        # Hook para formulário
-│   │
-│   ├── types/
-│   │   └── product.ts               # Interfaces TypeScript
-│   │
-│   ├── App.css                      # Estilos globais
-│   └── index.css                    # CSS base
-│
-├── package.json                     # Dependências
-├── vite.config.ts                   # Configuração Vite
-├── tsconfig.json                    # Configuração TypeScript
-├── tailwind.config.ts               # Configuração Tailwind
-├── eslint.config.js                 # Linter config
-└── index.html                       # HTML base
-```
-
----
-
-## 🎯 Funcionalidades
-
-| Funcionalidade | Status | Arquivo |
-|---|---|---|
-| Listar Produtos | ✅ | `ProductList.tsx` |
-| Buscar Produtos | ✅ | `ProductList.tsx` |
-| Filtrar por Categoria | ✅ | `ProductList.tsx` |
-| Adicionar Produto | ✅ | `AddProduct.tsx` + `ProductForm.tsx` |
-| Editar Produto | ✅ | `EditProduct.tsx` + `ProductForm.tsx` |
-| Deletar Produto | ✅ | `ProductCard.tsx` |
-| Validação de Formulário | ✅ | `ProductForm.tsx` |
-| Toast Notifications | ✅ | `ProductContext.tsx` |
-| Loading States | ✅ | `ProductList.tsx` |
-| Error Handling | ✅ | `api.ts` + `ProductContext.tsx` |
-| Design Responsivo | ✅ | Tailwind CSS |
-| API Integration | ✅ | `services/api.ts` |
-
----
-
-## 📊 Componentes React
-
-```
-App
-├── ProductList
-│   ├── PageHeader
-│   ├── Input (busca)
-│   ├── Select (filtro)
-│   ├── Stats (3 cards)
-│   └── ProductCard[] (grid)
-│       ├── Badge (estoque)
-│       └── AlertDialog (confirmar exclusão)
-│
-├── AddProduct
-│   ├── PageHeader
-│   └── ProductForm
-│       ├── Input (nome)
-│       ├── Textarea (descrição)
-│       ├── Input (preço)
-│       ├── Input (estoque)
-│       ├── Select (categoria)
-│       ├── Input (imagem)
-│       └── Button[] (submit/cancel)
-│
-└── EditProduct
-    ├── PageHeader
-    └── ProductForm (mesma de AddProduct)
-```
-
----
-
-## 🌐 Endpoints da API
-
-Seu backend deve responder conforme abaixo:
-
-### GET /api/products
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "1",
-      "name": "Notebook",
-      "description": "...",
-      "price": 3499.99,
-      "category": "Informática",
-      "stock": 15,
-      "imageUrl": "https://...",
-      "createdAt": "2026-03-01T10:00:00Z",
-      "updatedAt": "2026-03-01T10:00:00Z"
-    }
-  ]
-}
-```
-
-### POST /api/products
-**Request Body:**
-```json
-{
-  "name": "Produto",
-  "description": "Descrição",
-  "price": 99.99,
-  "category": "Categoria",
-  "stock": 10,
-  "imageUrl": "https://..."
-}
-```
-
-**Response:** Mesmo formato do GET
-
-### PUT /api/products/:id
-**Request Body:** Mesmo do POST
-
-**Response:** Mesmo do GET (produto atualizado)
-
-### DELETE /api/products/:id
-**Response:**
-```json
-{
-  "success": true
-}
-```
-
----
-
-## 🎨 Design
-
-### Headers
-- Gradiente: `from-slate-900 to-slate-800`
-- Ícones: Lucide React
-- Responsivo: Flex column/row
-
-### Cards
-- Imagem: 192px altura
-- Badge: Overlay top-right
-- Botões: Flex 1 com gap
-- Hover: Shadow aumenta
-
-### Formulários
-- Labels: Medium gray
-- Inputs: Background light
-- Errors: Red 600
-- Validação: OnBlur + onChange
-
-### Cores
-- Primária: Red 600 (botões)
-- Sucesso: Green 600 (preços)
-- Erro: Red 600 (alertas)
-- Info: Blue 600 (stats)
-
----
-
-## 🧪 Testar Conexão com Backend
-
-1. Abra DevTools (F12)
-2. Vá para aba "Network"
-3. Recarregue a página
-4. Procure por requisições para `http://localhost:3000/api/products`
-
-### Esperado:
-- ✅ Status 200
-- ✅ Response: `{ "success": true, "data": [...] }`
-- ✅ Produtos aparecem na tela
-
-### Se não aparecer:
-- ❌ Backend não está rodando
-- ❌ URL incorreta em `.env`
-- ❌ CORS não configurado no backend
-
-Solução: Ver [BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md)
-
----
-
-## 📦 Build para Produção
-
-```bash
-npm run build
-```
-
-Gera pasta `dist/` pronta para deploy.
-
----
-
-## 🐛 Troubleshooting
-
-### Erro: "Vite requires Node.js version 20.19+"
-**Solução:** Atualizar Node.js
-
-### Erro: "Cannot find module"
-**Solução:** Rodar `npm install`
-
-### Produtos não carregam
-**Solução:** 
-1. Verificar se backend está rodando
-2. Verificar URL em `.env`
-3. Verificar CORS no backend
-4. Ver Network tab em DevTools
-
-### Formulário não valida
-**Solução:**
-- Verificar console (F12)
-- Checar se campos têm `name` attribute
-- Confirmar `react-hook-form` está importado
-
-### Toast não aparece
-**Solução:**
-- Verificar se está dentro `BrowserRouter` + `ProductProvider`
-- Verificar import de `Sonner`
-
----
-
-## 📚 Documentação Completa
-
-| Documento | Conteúdo |
+| Script | Funcao |
 |---|---|
-| [SETUP.md](SETUP.md) | Como instalar e começar |
-| [BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md) | Integração com API |
-| [DESIGN_GUIDE.md](DESIGN_GUIDE.md) | Design visual e UX |
-| [NAVIGATION.md](NAVIGATION.md) | Rotas e fluxos de usuário |
-| [.env.example](.env.example) | Variáveis de ambiente |
+| `npm run dev` | Inicia o servidor Vite |
+| `npm run build` | Gera build de producao |
+| `npm run preview` | Visualiza o build localmente |
+| `npm run lint` | Executa o ESLint |
 
----
+## Docker
 
-## ✅ Checklist Final
+O `Dockerfile` inicia o Vite em modo desenvolvimento na porta `3000`.
 
-- [ ] Node.js 20+ instalado
-- [ ] `npm install` executado
-- [ ] Backend rodando em `http://localhost:3000`
-- [ ] `.env` configurado (se necessário)
-- [ ] `npm run dev` sem erros
-- [ ] Frontend abre em `http://localhost:5175`
-- [ ] Produtos carregam na lista
-- [ ] Botão "Novo Produto" funciona
-- [ ] Formulário valida corretamente
-- [ ] Produto criado aparece na lista
-- [ ] Edição funciona
-- [ ] Exclusão funciona
-- [ ] Busca funciona
-- [ ] Filtro funciona
+Quando usado pelo `docker-stack/compose.yaml`, o frontend fica em:
 
----
-
-## 🎉 Pronto!
-
-Seu sistema de cadastro de produtos está:
-- ✅ Funcionando completamente
-- ✅ Pronto para backend
-- ✅ Disponível em produção
-- ✅ Com toda documentação
-
-**Divirta-se!** 🚀
-
----
-
-**Criado em:** 27 de março de 2026  
-**Versão:** 1.0.0  
-**License:** MIT
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+http://localhost:3000
 ```
+
+## Fluxo de Funcionamento
+
+1. A tela inicial carrega a lista de produtos usando `ProductContext`.
+2. `ProductContext` chama a API pelo Axios configurado em `api.ts`.
+3. O backend retorna os produtos cadastrados no MySQL.
+4. O usuario pode buscar, filtrar, cadastrar, editar ou excluir produtos.
+5. Ao cadastrar ou editar com imagem, a imagem e enviada para o backend e servida depois pela rota `/uploads`.
+
+## Observacoes de Manutencao
+
+- A rota principal do backend aceita `/products` e `/produtos`.
+- O caminho usado pela aplicacao React e `/products`.
+- Para upload de imagem, o campo esperado pelo controller e `image`.
+- As notificacoes de sucesso e erro sao exibidas com Sonner.
