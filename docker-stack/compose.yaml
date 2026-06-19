@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://database/cadastro_de_produtos
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: felipe87
-      APP_CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5175,http://localhost:4175
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:3002,http://localhost:5175,http://localhost:4175
 
     ports:
      - "8084:8084"
@@ -44,17 +44,17 @@ services:
 
   frontend:
     build: 
-      context: ../cadastro_produtos_frontend
+      context: ../cadastro_de_produtos_frontend
       dockerfile: Dockerfile
 
     container_name: cadastro-frontend
 
     volumes:
-    - ../cadastro_produtos_frontend:/app
+    - ../cadastro_de_produtos_frontend:/app
     - /app/node_modules
 
     ports:
-     - "3000:3000"
+     - "3002:3002"
 
     environment:
       CHOKIDAR_USEPOLLING: "true" 
