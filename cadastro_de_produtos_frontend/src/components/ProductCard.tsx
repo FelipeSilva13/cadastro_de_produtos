@@ -116,7 +116,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
           <h3 className="line-clamp-2 text-2xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950">
             {product.name}
           </h3>
-          <p className="line-clamp-2 min-h-14 text-base leading-7 text-slate-600">
+          <p className="text-base leading-7 text-slate-600">
             {product.description}
           </p>
         </div>
