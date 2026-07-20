@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Sparkles } from 'lucide-react';
 import type { ProductFormData } from '../types/product';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -12,6 +14,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { apiPost } from '../api/api';
 
 interface ProductFormProps {
   defaultValues?: Partial<ProductFormData>;
@@ -54,6 +57,36 @@ export function ProductForm({
   });
 
   const selectedCategory = watch('category');
+  const [isGeneratingDescription, setIsGeneratingDescription] = useState(false);
+
+  const gerarDescricao = async () => {
+    const name = watch('name')?.trim();
+    const category = watch('category')?.trim();
+    const currentDescription = watch('description')?.trim();
+
+    if (!name || !category) {
+      alert('Informe o nome e a categoria do produto antes de gerar a descrição.');
+      return;
+    }
+
+    const produto = {
+      nome: name,
+      categoria: category,
+      descricao: currentDescription || `${name} ${category}`,
+    };
+
+    try {
+      setIsGeneratingDescription(true);
+      const response = await apiPost<{ descricao: string }>('/produtos/api/descricao', produto);
+
+      setValue('description', response.descricao, { shouldValidate: true });
+    } catch (error) {
+      console.error('Erro ao gerar descrição com IA:', error);
+      alert('Não foi possível gerar a descrição com IA no momento.');
+    } finally {
+      setIsGeneratingDescription(false);
+    }
+  };
 
   return (
     <Card className="border-slate-200 shadow-lg">
@@ -86,9 +119,22 @@ export function ProductForm({
 
           {/* Descrição */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-slate-700 font-medium">
-              Descrição *
-            </Label>
+            <div className="flex items-center justify-between gap-2">
+              <Label htmlFor="description" className="text-slate-700 font-medium">
+                Descrição *
+              </Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={gerarDescricao}
+                disabled={isGeneratingDescription || isSubmitting}
+                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+              >
+                <Sparkles className="w-4 h-4" />
+                {isGeneratingDescription ? 'Gerando...' : 'Descrição com IA'}
+              </Button>
+            </div>
             <Textarea
               id="description"
               {...register('description', { 
