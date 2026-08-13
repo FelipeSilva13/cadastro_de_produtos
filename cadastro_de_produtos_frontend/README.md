@@ -1,10 +1,20 @@
 # Cadastro de Produtos - Frontend
 
-Interface web do sistema de cadastro de produtos. O frontend foi criado com React, TypeScript e Vite, consumindo a API Spring Boot do backend.
+Interface web do sistema SysVendas. O frontend foi criado com React, TypeScript e Vite, consumindo a API Spring Boot do backend.
 
 ## Visao Geral
 
-O usuario consegue listar, buscar, filtrar, cadastrar, editar e excluir produtos. A aplicacao tambem permite enviar imagem no cadastro e na edicao de produtos, usando `multipart/form-data`.
+O sistema permite gerenciar produtos, clientes, pedidos, carrinho e checkout. A interface segue o estilo de dashboard do prototipo no Figma, com cabecalho SysVendas, menu lateral e indicadores visuais de status.
+
+## Funcionalidades Implementadas
+
+- **Dashboard:** indicadores de vendas do dia, pedidos pendentes, clientes, estoque baixo e grafico visual dos ultimos sete dias.
+- **Produtos:** listagem, busca por nome ou numero, filtros, cadastro, edicao, exclusao e upload de imagem.
+- **Numero do produto:** campo obrigatorio e positivo, exibido nos cards e usado na busca.
+- **Clientes:** formulario organizado em dados pessoais, contato e endereco.
+- **Pedidos:** dashboard com contadores, busca, filtros por status, cliente e periodo, tabela de pedidos, detalhes e cancelamento.
+- **Carrinho e checkout:** selecao de cliente e produtos, alteracao de quantidade, desconto, resumo do total e escolha entre Pix, cartao ou dinheiro.
+- **Status de pedido:** pendente em amarelo, pago em verde e cancelado em vermelho.
 
 ## Tecnologias
 
@@ -35,13 +45,18 @@ cadastro_produtos_frontend/
 |   |-- hooks/
 |   |   `-- useProductForm.ts       # Regras do formulario
 |   |-- pages/
+|   |   |-- Dashboard.tsx           # Indicadores gerais
 |   |   |-- ProductList.tsx         # Lista, busca e filtros
 |   |   |-- AddProduct.tsx          # Cadastro
 |   |   `-- EditProduct.tsx         # Edicao
+|   |   |-- Customers.tsx           # Cadastro de cliente
+|   |   |-- Orders.tsx              # Lista, filtros e detalhes de pedidos
+|   |   `-- Sales.tsx               # Novo pedido, carrinho e checkout
 |   |-- services/
 |   |   `-- ProdutoService.ts       # Servico auxiliar
 |   |-- types/
 |   |   `-- product.ts              # Tipos de produto
+|   |   `-- sales.ts                # Tipos de cliente, pedido e carrinho
 |   |-- App.tsx                     # Rotas da aplicacao
 |   `-- main.tsx                    # Entrada React
 |-- .env.example
@@ -57,6 +72,10 @@ cadastro_produtos_frontend/
 | `/` | Lista de produtos | Exibe produtos, busca, filtra e permite excluir |
 | `/add` | Cadastro de produto | Cria um novo produto |
 | `/edit/:id` | Edicao de produto | Atualiza um produto existente |
+| `/dashboard` | Dashboard | Mostra indicadores e resumo visual do sistema |
+| `/clientes` | Novo cliente | Cadastra cliente com dados de contato e endereco |
+| `/pedidos` | Lista de pedidos | Busca, filtra, visualiza detalhes e cancela pedidos |
+| `/vendas` | Novo pedido | Monta carrinho, aplica desconto e confirma pagamento |
 
 ## Integracao com a API
 
@@ -86,6 +105,12 @@ Assim, chamadas para `/api/products` sao encaminhadas para o backend em `http://
 | `POST` | `/products` | `/products` | Criar produto com imagem opcional |
 | `PUT` | `/products/{id}` | `/products/{id}` | Atualizar produto |
 | `DELETE` | `/products/{id}` | `/products/{id}` | Excluir produto |
+| `GET` | `/clientes` | `/clientes` | Listar clientes para selecao no pedido |
+| `POST` | `/clientes` | `/clientes` | Cadastrar cliente |
+| `GET` | `/pedidos` | `/pedidos` | Listar pedidos no dashboard de pedidos |
+| `POST` | `/pedidos` | `/pedidos` | Criar pedido com itens e desconto |
+| `POST` | `/pedidos/{id}/pagamentos` | `/pedidos/{id}/pagamentos` | Confirmar pagamento do pedido |
+| `POST` | `/pedidos/{id}/cancelar` | `/pedidos/{id}/cancelar` | Cancelar pedido |
 
 Para cadastro e edicao com imagem, o frontend envia um `FormData` com:
 
@@ -148,11 +173,12 @@ http://localhost:3000
 
 ## Fluxo de Funcionamento
 
-1. A tela inicial carrega a lista de produtos usando `ProductContext`.
-2. `ProductContext` chama a API pelo Axios configurado em `api.ts`.
-3. O backend retorna os produtos cadastrados no MySQL.
-4. O usuario pode buscar, filtrar, cadastrar, editar ou excluir produtos.
-5. Ao cadastrar ou editar com imagem, a imagem e enviada para o backend e servida depois pela rota `/uploads`.
+1. O menu SysVendas permite navegar entre Dashboard, Produtos, Clientes e Pedidos.
+2. Produtos e clientes sao carregados pela API para compor um novo pedido.
+3. Na tela de vendas, o usuario seleciona o cliente, adiciona produtos ao carrinho e informa desconto.
+4. O checkout calcula subtotal, desconto e valor final; depois envia a forma de pagamento.
+5. A lista de pedidos permite acompanhar status, filtrar resultados, visualizar itens e cancelar pedidos.
+6. Ao cadastrar ou editar produto com imagem, a imagem e enviada para o backend e servida pela rota `/uploads`.
 
 ## Observacoes de Manutencao
 

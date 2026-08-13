@@ -1,5 +1,6 @@
 export interface Product {
   id: number | string;
+  numero: number;
   name: string;
   description: string;
   price: number;
@@ -11,6 +12,7 @@ export interface Product {
 }
 
 export interface ProductFormData {
+  numero: number;
   name: string;
   description: string;
   price: number;

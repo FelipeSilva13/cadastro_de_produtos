@@ -29,6 +29,7 @@ export function ProductList() {
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
+      String(product.numero).includes(searchTerm) ||
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
@@ -45,7 +46,7 @@ export function ProductList() {
         title="Cadastro de Produtos"
         subtitle="Gerencie seu catálogo de produtos"
         actionButton={
-          <Button
+          <div className="flex gap-3"><Button asChild variant="outline" size="lg" className="h-14 rounded-2xl"><Link to="/vendas">Vendas</Link></Button><Button
             asChild
             size="lg"
             disabled={loading}
@@ -55,7 +56,7 @@ export function ProductList() {
               <Plus className="mr-2 h-5 w-5" />
               Novo Produto
             </Link>
-          </Button>
+          </Button></div>
         }
       />
 

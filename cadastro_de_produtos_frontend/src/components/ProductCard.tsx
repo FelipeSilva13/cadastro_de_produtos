@@ -113,6 +113,7 @@ export function ProductCard({ product, onDelete }: ProductCardProps) {
       </CardHeader>
       <CardContent className="space-y-6 p-6">
         <div className="space-y-3">
+          <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Produto #{product.numero}</span>
           <h3 className="line-clamp-2 text-2xl font-extrabold leading-tight tracking-[-0.04em] text-slate-950">
             {product.name}
           </h3>

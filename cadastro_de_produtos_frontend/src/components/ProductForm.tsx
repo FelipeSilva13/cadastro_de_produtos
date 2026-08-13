@@ -47,6 +47,7 @@ export function ProductForm({
   } = useForm<ProductFormData>({
     mode: 'onBlur',
     defaultValues: defaultValues || {
+      numero: 0,
       name: '',
       description: '',
       price: 0,
@@ -98,6 +99,23 @@ export function ProductForm({
       </CardHeader>
       <CardContent className="pt-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="numero" className="text-slate-700 font-medium">Numero do Produto *</Label>
+            <Input
+              id="numero"
+              type="number"
+              min="1"
+              {...register('numero', {
+                valueAsNumber: true,
+                required: 'Numero e obrigatorio',
+                min: { value: 1, message: 'Informe um numero positivo' },
+              })}
+              placeholder="Ex: 1001"
+              className="border-slate-300 bg-slate-50 focus:bg-white"
+            />
+            {errors.numero && <p className="text-sm text-red-600 font-medium">{errors.numero.message}</p>}
+          </div>
+
           {/* Nome */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-slate-700 font-medium">
